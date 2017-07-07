@@ -19,7 +19,6 @@ import java.util.List;
 @Transactional
 public class MangaServiceImpl implements MangaService {
     private final Logger logger = Logger.getLogger(MangaServiceImpl.class);
-    private static final String MANGA_DIRECTORY = "http://mangafox.me/directory/";
     private static final String MANGA_IMAGE = "manga_img";
     private static final String TITLE = "title";
     private static final String A_ATTRIBUTE = "a";
@@ -28,38 +27,41 @@ public class MangaServiceImpl implements MangaService {
     private static final String REL = "rel";
     private static final String DIV_MANGA_TEXT = "div.manga_text > a";
     private static final String HREF = "href";
+    private String mangaDirectoryUrl;
 
     @Autowired
     private MangaRepository mangaRepository;
 
     @Override
     public void insertManga() {
-        Document document;
+            List<Manga> mangaList = getDataFromWebsite(mangaDirectoryUrl);
+            for(int i = 1; i <= mangaList.size(); i++) {
+                Manga manga = mangaRepository.find(i);
+                String imageUrl = mangaList.get(i-1).getImageUrl();
+                manga.setImageUrl(imageUrl);
+                mangaRepository.saveOrUpdate(manga);
+            }
+        }
 
+    @Override
+    public List<Manga> getDataFromWebsite(String url) {
+        List<Manga> list = null;
         try {
-            document = Jsoup.connect(MANGA_DIRECTORY).get();
+            Document document = Jsoup.connect(url).get();
             Elements elements = document.getElementsByClass(MANGA_IMAGE);
             List<String> titles = document.getElementsByClass(TITLE).select(A_ATTRIBUTE).eachText();
             List<String> imagesUrl = elements.select(IMAGE).eachAttr(SOURCE);
             List<String> ids = elements.eachAttr(REL);
             List<String> chaptersUrl = document.select(DIV_MANGA_TEXT).eachAttr(HREF);
-            List<Manga> list = buildMangaList(ids, titles, imagesUrl, chaptersUrl);
-
-            for(int i = 1; i <= list.size(); i++) {
-                Manga manga = mangaRepository.find(i);
-                String imageUrl = list.get(i-1).getImageUrl();
-                manga.setImageUrl(imageUrl);
-                mangaRepository.saveOrUpdate(manga);
-            }
+            list = buildMangaList(ids, titles, imagesUrl, chaptersUrl);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+        return list;
     }
-
 
     private List<Manga> buildMangaList(List<String> ids, List<String> titles, List<String> imagesUrl, List<String> url) {
         List<Manga> list = new ArrayList<>();
-
         int size = ids.size();
 
         for(int i = 0; i < size; i++) {
@@ -67,5 +69,13 @@ public class MangaServiceImpl implements MangaService {
             list.add(manga);
         }
         return list;
+    }
+
+    public String getMangaDirectoryUrl() {
+        return mangaDirectoryUrl;
+    }
+
+    public void setMangaDirectoryUrl(String mangaDirectoryUrl) {
+        this.mangaDirectoryUrl = mangaDirectoryUrl;
     }
 }
