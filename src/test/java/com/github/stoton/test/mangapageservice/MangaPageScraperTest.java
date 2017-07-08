@@ -24,9 +24,13 @@ class MangaPageScraperImpl implements Scraper {
         List<String> imagesUrls = new ArrayList<>();
         for(int i = 1; i <= length; i++) {
             ClassLoader classLoader = getClass().getClassLoader();
-            File file = new File(classLoader.getResource(fileName + i + HTML).getFile());
+            File file = new File(classLoader.getResource("mangaPageFiles/" + fileName + i + HTML).getFile());
             Document document = Jsoup.parse(file, "UTF-8");
             Element element = document.getElementsByClass(READ_IMAGE).first();
+            if(element == null) {
+                continue;
+            }
+
             String imageUrl = element.select(IMAGE).attr(SOURCE);
             imagesUrls.add(imageUrl);
         }
@@ -39,18 +43,28 @@ public class MangaPageScraperTest {
     private static final String SECOND_MANGA_PAGE = "http://l.mfcdn.net/store/manga/11362/01-002.0/compressed/iopm_002_002.jpg";
     private static final String THIRD_MANGA_PAGE = "http://l.mfcdn.net/store/manga/11362/01-002.0/compressed/iopm_002_003.jpg";
 
-    private static final String FILE_NAME = "mangaPage";
+    private static final String COMPLETE_FILE_NAME = "mangaPage";
+    private static final String NOT_COMPLETE_FILE_NAME = "notCompleteMangaPage";
     private static final int LENGTH = 3;
 
     @Test
-    public void downloadMangaPagesFromWebsiteTest() throws IOException {
+    public void downloadMangaPagesFromWebsiteWhenEverythingIsOkTest() throws IOException {
         Scraper scraper = new MangaPageScraperImpl();
-        List<String> actual = scraper.downloadMangaPagesFromWebsite(FILE_NAME, LENGTH);
+        List<String> actual = scraper.downloadMangaPagesFromWebsite(COMPLETE_FILE_NAME, LENGTH);
         List<String> exptected = new ArrayList<>();
         exptected.add(FIRST_MANGA_PAGE);
         exptected.add(SECOND_MANGA_PAGE);
         exptected.add(THIRD_MANGA_PAGE);
 
         assertEquals(actual, exptected);
+    }
+
+    @Test
+    public void downloadMangaPagesFromWebsiteWhenDocumentIsNotComplete() throws IOException {
+        Scraper scraper = new MangaPageScraperImpl();
+        List<String> actual = scraper.downloadMangaPagesFromWebsite(NOT_COMPLETE_FILE_NAME, LENGTH);
+        List<String> expected = new ArrayList<>();
+
+        assertEquals(actual, expected);
     }
 }

@@ -42,18 +42,32 @@ class MangaParserImpl implements Parser {
 
 public class MangaParserTest {
     @Test
-    public void testMangaParser() throws IOException {
+    public void mangaParserTestWhenEverythingIsOk() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("mangaDirectory.html").getFile());
+        File file = new File(classLoader.getResource("mangaFiles/mangaDirectory.html").getFile());
         Document doc = Jsoup.parse(file, "UTF-8");
 
-        Parser<Manga> parser = new MangaParserImpl();
-        List<Manga> list = parser.parseDocument(doc);
+        Parser parser = new MangaParserImpl();
+        List<Manga> actual = parser.parseDocument(doc);
         List<Manga> exptected = new ArrayList<>();
         exptected.add(new Manga("11362", "Onepunch-Man", "http://l.mfcdn.net/store/manga/11362/cover.jpg?v=1498117442", "http://mangafox.me/manga/onepunch_man/"));
         exptected.add(new Manga("16627", "Tales of Demons and Gods", "http://l.mfcdn.net/store/manga/16627/cover.jpg?v=1499325542","http://mangafox.me/manga/tales_of_demons_and_gods/"));
         exptected.add(new Manga("246", "Fairy Tail", "http://l.mfcdn.net/store/manga/246/cover.jpg?v=1499332941", "http://mangafox.me/manga/fairy_tail/"));
 
-        assertEquals(exptected, list);
+        assertEquals(exptected, actual);
     }
+
+    @Test
+    public void mangaParserTestWhenDocumentIsNotComplete() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("mangaFiles/notCompleteMangaDirectory.html").getFile());
+        Document doc = Jsoup.parse(file, "UTF-8");
+
+        Parser parser = new MangaParserImpl();
+        List<Manga> actual = parser.parseDocument(doc);
+        List<Manga> exptected = new ArrayList<>();
+
+        assertEquals(exptected, actual);
+    }
+
 }

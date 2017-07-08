@@ -76,6 +76,9 @@ public class MangaPageServiceImpl implements MangaPageService {
                     document = Jsoup.connect(urlToConnect).get();
                     isScraped = true;
                     Element element = document.getElementsByClass(READ_IMAGE).first();
+                    if(element == null) {
+                        continue;
+                    }
                     String imageUrl = element.select(IMAGE).attr(SOURCE);
                     imagesUrls.add(imageUrl);
                 } catch (Exception e) {

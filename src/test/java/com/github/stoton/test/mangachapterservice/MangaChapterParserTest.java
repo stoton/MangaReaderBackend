@@ -31,7 +31,7 @@ class MangaChapterParserImpl implements Parser {
         List<Manga> mangaList = new ArrayList<>();
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("specificMangaChapter.html").getFile());
+        File file = new File(classLoader.getResource("mangaChapterFiles/specificMangaChapter.html").getFile());
         Document mangaChapterDocument = Jsoup.parse(file, "UTF-8");
 
         String mangaUrl = manga.getUrl();
@@ -91,10 +91,10 @@ public class MangaChapterParserTest {
     @Test
     public void testMangaChapterParser() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("mangaChapterDirectory.html").getFile());
+        File file = new File(classLoader.getResource("mangaChapterFiles/mangaChapterDirectory.html").getFile());
         Document doc = Jsoup.parse(file, "UTF-8");
 
-        Parser<MangaChapter> parser = new MangaChapterParserImpl();
+        Parser parser = new MangaChapterParserImpl();
         List<MangaChapter> chapterList = parser.parseDocument(doc);
         List<MangaChapter> exptected = new ArrayList<>();
         exptected.add(new MangaChapter("http://mangafox.me/manga/onepunch_man/v01/c001/1.html", 19, 1, MangaChapterParserImpl.manga));
