@@ -16,6 +16,7 @@ import java.util.List;
 
 @Service
 public class MangaPageServiceImpl implements MangaPageService {
+
     private final Logger logger = Logger.getLogger(MangaPageServiceImpl.class);
     private static final int SLASHES_BEFORE_MANGA_PAGE = 7;
     private static final String ERROR_WITH_CONNECTION = "Connection lost - error 503. Wait for next try.";

@@ -62,6 +62,8 @@ public class MangaChapter {
         return manga;
     }
 
+    public void setId(long id) { this.id = id;}
+
     public void setUrl(String url) {
         this.url = url;
     }
