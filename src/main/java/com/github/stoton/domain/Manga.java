@@ -85,4 +85,30 @@ public class Manga {
                 ", mangaChapters=" + mangaChapters +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Manga manga = (Manga) o;
+
+        if (id != manga.id) return false;
+        if (relId != null ? !relId.equals(manga.relId) : manga.relId != null) return false;
+        if (title != null ? !title.equals(manga.title) : manga.title != null) return false;
+        if (imageUrl != null ? !imageUrl.equals(manga.imageUrl) : manga.imageUrl != null) return false;
+        if (url != null ? !url.equals(manga.url) : manga.url != null) return false;
+        return mangaChapters != null ? mangaChapters.equals(manga.mangaChapters) : manga.mangaChapters == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (relId != null ? relId.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (mangaChapters != null ? mangaChapters.hashCode() : 0);
+        return result;
+    }
 }

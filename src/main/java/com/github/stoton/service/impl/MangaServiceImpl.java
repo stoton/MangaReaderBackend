@@ -45,7 +45,7 @@ public class MangaServiceImpl implements MangaService {
 
     @Override
     public List<Manga> getDataFromWebsite(String url) {
-        List<Manga> list = null;
+        List<Manga> list = new ArrayList<>();
         try {
             Document document = Jsoup.connect(url).get();
             Elements elements = document.getElementsByClass(MANGA_IMAGE);
@@ -60,6 +60,11 @@ public class MangaServiceImpl implements MangaService {
         return list;
     }
 
+    @Override
+    public void setMangaDirectoryUrl(String mangaDirectoryUrl) {
+        this.mangaDirectoryUrl = mangaDirectoryUrl;
+    }
+
     private List<Manga> buildMangaList(List<String> ids, List<String> titles, List<String> imagesUrl, List<String> url) {
         List<Manga> list = new ArrayList<>();
         int size = ids.size();
@@ -69,13 +74,5 @@ public class MangaServiceImpl implements MangaService {
             list.add(manga);
         }
         return list;
-    }
-
-    public String getMangaDirectoryUrl() {
-        return mangaDirectoryUrl;
-    }
-
-    public void setMangaDirectoryUrl(String mangaDirectoryUrl) {
-        this.mangaDirectoryUrl = mangaDirectoryUrl;
     }
 }

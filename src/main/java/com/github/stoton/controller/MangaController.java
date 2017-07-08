@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 public class MangaController {
+    private static final String MANGA_DIRECTORY = "http://mangafox.me/directory/";
     private final Logger logger = Logger.getLogger(MangaController.class);
 
     @Autowired
@@ -31,6 +32,7 @@ public class MangaController {
     @RequestMapping("/insertManga")
     public void insertManga() {
         try {
+            mangaService.setMangaDirectoryUrl(MANGA_DIRECTORY);
             mangaService.insertManga();
         } catch (IOException e) {
             logger.error(e.getMessage());
