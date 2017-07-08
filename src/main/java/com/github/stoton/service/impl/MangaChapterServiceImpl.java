@@ -102,7 +102,6 @@ public class MangaChapterServiceImpl implements MangaChapterService {
 
     private List<MangaChapter> buildMangaChaptersList(List<String> chaptersURL, Manga manga) {
         List<MangaChapter> mangaChapterList = new ArrayList<>();
-        int size = chaptersURL.size();
 
         for (String url : chaptersURL) {
             MangaChapter mangaChapter = new MangaChapter();

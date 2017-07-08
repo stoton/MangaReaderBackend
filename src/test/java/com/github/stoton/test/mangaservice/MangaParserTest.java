@@ -1,6 +1,7 @@
 package com.github.stoton.test.mangaservice;
 
 import com.github.stoton.domain.Manga;
+import com.github.stoton.test.Parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -12,11 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-interface Parser {
-    List<Manga> parseDocument(Document document);
-}
-
-class ParserImpl implements Parser {
+class MangaParserImpl implements Parser {
     private static final String MANGA_IMAGE = "manga_img";
     private static final String TITLE = "title";
     private static final String A_ATTRIBUTE = "a";
@@ -45,12 +42,12 @@ class ParserImpl implements Parser {
 
 public class MangaParserTest {
     @Test
-    public void testParser() throws IOException {
+    public void testMangaParser() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("mangaDirectory.html").getFile());
         Document doc = Jsoup.parse(file, "UTF-8");
 
-        Parser parser = new ParserImpl();
+        Parser<Manga> parser = new MangaParserImpl();
         List<Manga> list = parser.parseDocument(doc);
         List<Manga> exptected = new ArrayList<>();
         exptected.add(new Manga("11362", "Onepunch-Man", "http://l.mfcdn.net/store/manga/11362/cover.jpg?v=1498117442", "http://mangafox.me/manga/onepunch_man/"));

@@ -96,4 +96,30 @@ public class MangaChapter {
                 ", manga=" + manga +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MangaChapter that = (MangaChapter) o;
+
+        if (id != that.id) return false;
+        if (length != that.length) return false;
+        if (number != that.number) return false;
+        if (url != null ? !url.equals(that.url) : that.url != null) return false;
+        if (mangaPages != null ? !mangaPages.equals(that.mangaPages) : that.mangaPages != null) return false;
+        return manga != null ? manga.equals(that.manga) : that.manga == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + length;
+        result = 31 * result + number;
+        result = 31 * result + (mangaPages != null ? mangaPages.hashCode() : 0);
+        result = 31 * result + (manga != null ? manga.hashCode() : 0);
+        return result;
+    }
 }
