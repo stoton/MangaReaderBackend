@@ -56,15 +56,24 @@ public class MangaPageScraperTest {
         exptected.add(SECOND_MANGA_PAGE);
         exptected.add(THIRD_MANGA_PAGE);
 
-        assertEquals(actual, exptected);
+        assertEquals(exptected, actual);
     }
 
     @Test
     public void downloadMangaPagesFromWebsiteWhenDocumentIsNotComplete() throws IOException {
         Scraper scraper = new MangaPageScraperImpl();
         List<String> actual = scraper.downloadMangaPagesFromWebsite(NOT_COMPLETE_FILE_NAME, LENGTH);
-        List<String> expected = new ArrayList<>();
+        List<String> exptected = new ArrayList<>();
 
-        assertEquals(actual, expected);
+        assertEquals(exptected, actual);
+    }
+
+    @Test
+    public void downloadMangaPagesFromWebsiteWhenDocumentIsNull() throws IOException {
+        Scraper scraper = new MangaPageScraperImpl();
+        List<String> actual = scraper.downloadMangaPagesFromWebsite(null, -1);
+        List<String> exptected = new ArrayList<>();
+
+        assertEquals(exptected, actual);
     }
 }

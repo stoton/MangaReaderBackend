@@ -58,6 +58,8 @@ public class InsertAndGetMangaPagesTest {
         assertEquals(3, mangaPages.size());
     }
 
+
+
     private class InMemoryFakeRepository implements MangaPageRepository {
         List<MangaPage> mangaPages = new ArrayList<>();
 

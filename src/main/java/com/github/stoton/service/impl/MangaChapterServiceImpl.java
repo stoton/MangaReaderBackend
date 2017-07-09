@@ -41,8 +41,15 @@ public class MangaChapterServiceImpl implements MangaChapterService {
         try {
             for (Manga manga : mangaList) {
                 document = Jsoup.connect(manga.getUrl()).get();
+
+                if(document == null) {
+                    logger.error("Website isn't available.");
+                    return;
+                }
+
                 List<String> elementsFromH3 = document.select(FROM_H3).eachAttr(HREF);
                 List<String> elementsFromH4 = document.select(FROM_H4).eachAttr(HREF);
+
 
                 String mangaUrl = manga.getUrl();
 

@@ -48,6 +48,8 @@ public class MangaServiceImpl implements MangaService {
         List<Manga> list = new ArrayList<>();
         try {
             Document document = Jsoup.connect(url).get();
+            if(document == null)
+                return new ArrayList<>();
             Elements elements = document.getElementsByClass(MANGA_IMAGE);
             List<String> titles = document.getElementsByClass(TITLE).select(A_ATTRIBUTE).eachText();
             List<String> imagesUrl = elements.select(IMAGE).eachAttr(SOURCE);

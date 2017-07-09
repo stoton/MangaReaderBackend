@@ -28,6 +28,10 @@ class MangaChapterParserImpl implements Parser {
 
     @Override
     public List<MangaChapter> parseDocument(Document document) throws IOException {
+        if(document == null)
+            return new ArrayList<MangaChapter>();
+
+
         List<Manga> mangaList = new ArrayList<>();
 
         ClassLoader classLoader = getClass().getClassLoader();
@@ -88,17 +92,47 @@ class MangaChapterParserImpl implements Parser {
 }
 
 public class MangaChapterParserTest {
+
+    private static final String MANGA_CHAPTER_DIRECTORY = "mangaChapterFiles/mangaChapterDirectory.html";
+    private static final String NOT_COMPLETE_MANGA_CHAPTER_DIRECTORY = "mangaChapterFiles/notCompleteMangaChapterDirectory.html";
+    private static final String MANGA_CHAPTER_URL = "http://mangafox.me/manga/onepunch_man/v01/c001/1.html";
+    private static final int MANGA_CHAPTER_LENGTH = 19;
+    private static final int MANGA_CHAPTER_NUMBER = 1;
+
     @Test
-    public void testMangaChapterParser() throws IOException {
+    public void mangaChapterTestParserWhenEverythingisOk() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("mangaChapterFiles/mangaChapterDirectory.html").getFile());
+        File file = new File(classLoader.getResource(MANGA_CHAPTER_DIRECTORY).getFile());
         Document doc = Jsoup.parse(file, "UTF-8");
 
         Parser parser = new MangaChapterParserImpl();
-        List<MangaChapter> chapterList = parser.parseDocument(doc);
+        List<MangaChapter> actual = parser.parseDocument(doc);
         List<MangaChapter> exptected = new ArrayList<>();
-        exptected.add(new MangaChapter("http://mangafox.me/manga/onepunch_man/v01/c001/1.html", 19, 1, MangaChapterParserImpl.manga));
+        exptected.add(new MangaChapter(MANGA_CHAPTER_URL, MANGA_CHAPTER_LENGTH, MANGA_CHAPTER_NUMBER, MangaChapterParserImpl.manga));
 
-        assertEquals(exptected, chapterList);
+        assertEquals(exptected, actual);
+    }
+
+    @Test
+    public void mangaChapterTestParserWhenDocumentIsNotComplete() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource(NOT_COMPLETE_MANGA_CHAPTER_DIRECTORY).getFile());
+        Document doc = Jsoup.parse(file, "UTF-8");
+
+        Parser parser = new MangaChapterParserImpl();
+        List<MangaChapter> actual = parser.parseDocument(doc);
+        List<MangaChapter> exptected = new ArrayList<>();
+
+        assertEquals(exptected, actual);
+    }
+
+    @Test
+    public void mangaChapterTestParserWhenDocumentIsNull() throws IOException {
+        Document document = null;
+        Parser parser = new MangaChapterParserImpl();
+        List<MangaChapter> actual = parser.parseDocument(document);
+        List<MangaChapter> exptected = new ArrayList<>();
+
+        assertEquals(exptected, actual);
     }
 }

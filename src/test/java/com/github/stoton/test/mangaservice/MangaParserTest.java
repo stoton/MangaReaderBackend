@@ -4,6 +4,7 @@ import com.github.stoton.domain.Manga;
 import com.github.stoton.test.Parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -25,7 +26,10 @@ class MangaParserImpl implements Parser {
 
     @Override
     public List<Manga> parseDocument(Document document) {
-        List<Manga> list = new ArrayList<>();
+        List<Manga> mangaList = new ArrayList<>();
+        if(document == null)
+            return mangaList;
+
         Elements elements = document.getElementsByClass(MANGA_IMAGE);
         List<String> titles = document.getElementsByClass(TITLE).select(A_ATTRIBUTE).eachText();
         List<String> imagesUrl = elements.select(IMAGE).eachAttr(SOURCE);
@@ -34,9 +38,9 @@ class MangaParserImpl implements Parser {
 
         for(int i = 0; i < titles.size(); i++) {
             Manga manga = new Manga(ids.get(i), titles.get(i), imagesUrl.get(i), chaptersUrl.get(i));
-            list.add(manga);
+            mangaList.add(manga);
         }
-        return list;
+        return mangaList;
     }
 }
 
@@ -62,6 +66,17 @@ public class MangaParserTest {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("mangaFiles/notCompleteMangaDirectory.html").getFile());
         Document doc = Jsoup.parse(file, "UTF-8");
+
+        Parser parser = new MangaParserImpl();
+        List<Manga> actual = parser.parseDocument(doc);
+        List<Manga> exptected = new ArrayList<>();
+
+        assertEquals(exptected, actual);
+    }
+
+    @Test
+    public void mangaParserTestWhenDocumentIsNull() throws IOException {
+        Document doc = null;
 
         Parser parser = new MangaParserImpl();
         List<Manga> actual = parser.parseDocument(doc);
